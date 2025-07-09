@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
             },
             currentIndex: current,
             backgroundColor: Colors.black87,
-            selectedItemColor: Colors.white,
+            selectedItemColor: Colors.green,
             unselectedItemColor: Colors.grey,
             elevation: 0,
             items: [
