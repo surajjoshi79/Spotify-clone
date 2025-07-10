@@ -1,0 +1,14 @@
+import '../model/category.dart';
+
+class CategoryService{
+  static List<Category> getCategory(){
+    return <Category>[
+      Category(title: "Top hits",imageUrl: "https://www.google.com/imgres?q=top%20hits&imgurl=https%3A%2F%2Fimages.crunchbase.com%2Fimage%2Fupload%2Fc_pad%2Ch_256%2Cw_256%2Cf_auto%2Cq_auto%3Aeco%2Cdpr_1%2Fvp5jhbgvt9byjwuc3ug8&imgrefurl=https%3A%2F%2Fwww.crunchbase.com%2Forganization%2Ftop-hits&docid=5vBLFHfmmhFBEM&tbnid=zHPQCPPNiFtm7M&vet=12ahUKEwjhh8KFnKuOAxV24zgGHXKBDAUQM3oECBYQAA..i&w=256&h=256&hcb=2&ved=2ahUKEwjhh8KFnKuOAxV24zgGHXKBDAUQM3oECBYQAA"),
+      Category(title: "Mj hits",imageUrl: "https://www.google.com/imgres?q=mj%20hits&imgurl=https%3A%2F%2Fcdn.musicboard.app%2Fmusicboard%2Fmedia%2FplEv37XdFlu8iHZ1oFHmpo11wegcS7Ge59f60a0fdKk0mL7yYId5ag10ZGJwJGGr.webp&imgrefurl=https%3A%2F%2Fmusicboard.app%2Fartist%2Fmichael-jackson%2Freleases&docid=huMaJTkzkfI1BM&tbnid=ZlDGzcNbknDwtM&vet=12ahUKEwiswP-inKuOAxVHzTgGHQNSHuUQM3oECBMQAA..i&w=256&h=256&hcb=2&ved=2ahUKEwiswP-inKuOAxVHzTgGHQNSHuUQM3oECBMQAA"),
+      Category(title: "Cool hits",imageUrl: "https://www.google.com/imgres?q=cool%20hits&imgurl=https%3A%2F%2Fstatic.mytuner.mobi%2Fmedia%2Ftvos_radios%2F418%2Ftotally-cool-hits-radio.8cc5ae0a.jpg&imgrefurl=https%3A%2F%2Fwww.radio-uk.co.uk%2Ftotally-cool-hits-radio&docid=hYrPHVPWd89vjM&tbnid=QK1tV55h6uNYeM&vet=12ahUKEwjA3NLHnKuOAxV8yDgGHQktMAAQM3oECBsQAA..i&w=256&h=256&hcb=2&ved=2ahUKEwjA3NLHnKuOAxV8yDgGHQktMAAQM3oECBsQAA"),
+      Category(title: "Pop hits",imageUrl: "https://www.google.com/imgres?q=pop%20hits&imgurl=https%3A%2F%2Fis2-ssl.mzstatic.com%2Fimage%2Fthumb%2FPurple123%2Fv4%2Fda%2F36%2Fe8%2Fda36e892-c2b6-d84a-66e1-fdb195d57f30%2Fsource%2F256x256bb.jpg&imgrefurl=https%3A%2F%2Fappadvice.com%2Fapp%2Fbest-of-pop-music-pop-radio%2F1473658884&docid=6InwJoOMb3P1UM&tbnid=s1PPFSvqevssVM&vet=12ahUKEwjLlobWnKuOAxUKwzgGHdw6C94QM3oECBkQAA..i&w=256&h=256&hcb=2&itg=1&ved=2ahUKEwjLlobWnKuOAxUKwzgGHdw6C94QM3oECBkQAA"),
+      Category(title: "Romantic hits",imageUrl: "https://www.google.com/imgres?q=romantic%20hits&imgurl=https%3A%2F%2Fstatic.mytuner.mobi%2Fmedia%2Ftvos_radios%2F003%2Fromantic-vibes.e695b56b.png&imgrefurl=https%3A%2F%2Fwww.radio-south-africa.co.za%2Fae%2Fromantic-vibes&docid=xYo3zyvRqONwdM&tbnid=0YfTBrLXjPI9pM&vet=12ahUKEwiF_P-1nKuOAxX8xjgGHeq0OuMQM3oECGUQAA..i&w=256&h=256&hcb=2&ved=2ahUKEwiF_P-1nKuOAxX8xjgGHeq0OuMQM3oECGUQAA"),
+      Category(title: "Rock hits",imageUrl: "https://www.google.com/imgres?q=rock%20hits&imgurl=https%3A%2F%2Fmedia.plus.rtl.de%2Fmusic-deezer%2Fplaylist%2Fd0807a0582eb4967d0801bbb11b57f49%2F256x256-000000-80-0-0.jpg%3Ftr%3Df-auto%2Cw-256&imgrefurl=https%3A%2F%2Fplus.rtl.de%2Fmusik%2Fplaylist-752286631&docid=EGQ_jxRjGt0gVM&tbnid=iZegeaoGpxIl-M&vet=12ahUKEwjam_HjnKuOAxVizDgGHduBEU0QM3oECBoQAA..i&w=256&h=256&hcb=2&ved=2ahUKEwjam_HjnKuOAxVizDgGHduBEU0QM3oECBoQAA")
+    ];
+  }
+}

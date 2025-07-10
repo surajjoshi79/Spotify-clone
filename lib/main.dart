@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:spotify_clone/screen/home.dart';
 import 'package:spotify_clone/screen/library.dart';
 import 'package:spotify_clone/screen/search.dart';
+import 'package:spotify_clone/theme_provider.dart';
+import 'package:spotify_clone/utils.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await sharedPreferences.init();
+  runApp(ChangeNotifierProvider(
+      create: (context)=>ThemeProvider(),
+      child: MyApp())
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -20,6 +28,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: Provider.of<ThemeProvider>(context).getTheme(),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: IndexedStack(
@@ -33,7 +42,7 @@ class _MyAppState extends State<MyApp> {
               });
             },
             currentIndex: current,
-            backgroundColor: Colors.black87,
+            backgroundColor: Colors.transparent,
             selectedItemColor: Colors.green,
             unselectedItemColor: Colors.grey,
             elevation: 0,
