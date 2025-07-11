@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_clone/screen/music_player.dart';
 import '../model/music.dart';
 import '../service/music_service.dart';
 
@@ -116,39 +117,46 @@ class _LibraryState extends State<Library> {
                 itemCount: music.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Stack(
-                      children: [
-                        SizedBox(
-                          width: 160,
-                          child: SizedBox(
-                            height: 300,
-                            width: 150,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                music[index].imageUrl,
-                                fit: BoxFit.fill,
+                  return GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                        return MusicPlayer(playing: music[index]);
+                      }));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Stack(
+                        children: [
+                          SizedBox(
+                            width: 160,
+                            child: SizedBox(
+                              height: 300,
+                              width: 150,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  music[index].imageUrl,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              music[index].label,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.inversePrimary,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                music[index].label,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
