@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_clone/provider/favorite_provider.dart';
 import 'package:spotify_clone/model/music.dart';
+import 'package:provider/provider.dart';
 
 class MusicPlayer extends StatefulWidget {
   Music playing;
@@ -110,11 +112,60 @@ class _MusicPlayerState extends State<MusicPlayer> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  IconButton(onPressed: (){}, icon: Icon(Icons.skip_previous,size: 40)),
-                  IconButton(onPressed: (){}, icon: Icon(Icons.pause_circle,size: 60,color: Colors.green)),
-                  IconButton(onPressed: (){}, icon: Icon(Icons.skip_next,size: 40))
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.info, size: 40),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.skip_previous, size: 40),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.pause_circle,
+                      size: 60,
+                      color: Colors.green,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.skip_next, size: 40),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      if (!Provider.of<FavoriteProvider>(
+                        context,
+                        listen: false,
+                      ).favorite.contains(widget.playing)) {
+                        Provider.of<FavoriteProvider>(
+                          context,
+                          listen: false,
+                        ).addFavorite(widget.playing);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Added to favorite")),
+                        );
+                        setState(() {});
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Already Added")),
+                        );
+                      }
+                    },
+                    icon: Icon(
+                      Icons.favorite,
+                      size: 35,
+                      color:
+                          Provider.of<FavoriteProvider>(
+                                context,
+                                listen: false,
+                              ).favorite.contains(widget.playing)
+                              ? Colors.red
+                              : Theme.of(context).colorScheme.inversePrimary,
+                    ),
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),

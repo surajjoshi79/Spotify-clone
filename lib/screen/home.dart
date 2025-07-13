@@ -2,6 +2,7 @@ import 'package:spotify_clone/model/artist.dart';
 import 'package:spotify_clone/model/category.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/model/music.dart';
+import 'package:spotify_clone/screen/artist_page.dart';
 import 'package:spotify_clone/screen/music_player.dart';
 import 'package:spotify_clone/screen/setting.dart';
 import 'package:spotify_clone/service/artist_service.dart';
@@ -232,34 +233,41 @@ class _HomeState extends State<Home> {
               SizedBox(
                 height: 260,
                 child: ListView.builder(
-                  itemCount: music.length,
+                  itemCount: artist.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: 160,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 150,
-                              width: 150,
-                              child: CircleAvatar(
-                                foregroundImage: NetworkImage(
-                                  artist[index].imageUrl,
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                            return ArtistPage(artist: artist[index]);
+                          }));
+                        },
+                        child: SizedBox(
+                          width: 160,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 150,
+                                width: 150,
+                                child: CircleAvatar(
+                                  foregroundImage: NetworkImage(
+                                    artist[index].imageUrl,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              artist[index].name,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.inversePrimary,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                              SizedBox(height: 8),
+                              Text(
+                                artist[index].name,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );

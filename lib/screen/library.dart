@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_clone/screen/favorite.dart';
 import 'package:spotify_clone/screen/music_player.dart';
 import '../model/music.dart';
 import '../service/music_service.dart';
+import 'followed.dart';
 
 class Library extends StatefulWidget {
   const Library({super.key});
@@ -70,30 +72,52 @@ class _LibraryState extends State<Library> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: libraryTabColor[index],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            height: 80,
-                            width: 60,
-                            child: libraryTabIcons[index],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              libraryTab[index],
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (index == 0) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return Favorite();
+                              },
+                            ),
+                          );
+                        }
+                        if (index == 1) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return Followed();
+                              },
+                            ),
+                          );
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: libraryTabColor[index],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: 80,
+                              width: 60,
+                              child: libraryTabIcons[index],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                libraryTab[index],
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -118,10 +142,14 @@ class _LibraryState extends State<Library> {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                    onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                        return MusicPlayer(playing: music[index]);
-                      }));
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return MusicPlayer(playing: music[index]);
+                          },
+                        ),
+                      );
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -148,7 +176,10 @@ class _LibraryState extends State<Library> {
                               child: Text(
                                 music[index].label,
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.inversePrimary,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),

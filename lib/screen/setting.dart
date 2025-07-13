@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:spotify_clone/theme_provider.dart';
+import 'package:spotify_clone/provider/theme_provider.dart';
 import 'package:spotify_clone/utils.dart';
 import 'package:provider/provider.dart';
 
