@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/screen/favorite.dart';
 import 'package:spotify_clone/screen/music_player.dart';
+import 'package:spotify_clone/screen/playlist.dart';
 import '../model/music.dart';
 import '../service/music_service.dart';
 import 'followed.dart';
@@ -14,7 +15,7 @@ class Library extends StatefulWidget {
 
 class _LibraryState extends State<Library> {
   List<Music> music = MusicService.getMusic();
-  final libraryTab = ["Favorite", "Followed", "Most Played", "Downloaded"];
+  final libraryTab = ["Favorite", "Followed", "Playlist", "Downloaded"];
   final libraryTabColor = [
     Colors.brown,
     Colors.yellow,
@@ -60,8 +61,9 @@ class _LibraryState extends State<Library> {
               ),
             ),
             SizedBox(
-              height: 200,
+              height: 160,
               child: GridView.builder(
+                padding: EdgeInsets.zero,
                 itemCount: 4,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -88,6 +90,15 @@ class _LibraryState extends State<Library> {
                             MaterialPageRoute(
                               builder: (context) {
                                 return Followed();
+                              },
+                            ),
+                          );
+                        }
+                        if (index==2) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return Playlist();
                               },
                             ),
                           );
@@ -138,6 +149,7 @@ class _LibraryState extends State<Library> {
             SizedBox(
               height: 260,
               child: ListView.builder(
+                padding: EdgeInsets.zero,
                 itemCount: music.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
@@ -156,7 +168,7 @@ class _LibraryState extends State<Library> {
                       child: Stack(
                         children: [
                           SizedBox(
-                            width: 160,
+                            width: 180,
                             child: SizedBox(
                               height: 300,
                               width: 150,

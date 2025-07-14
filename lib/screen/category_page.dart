@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_clone/model/artist.dart';
+import 'package:spotify_clone/model/category.dart';
 import 'package:spotify_clone/screen/music_player.dart';
 import 'package:provider/provider.dart';
 import '../provider/favorite_provider.dart';
-import 'package:spotify_clone/provider/follow_provider.dart';
+import '../provider/playlist_provider.dart';
 
-class ArtistPage extends StatefulWidget {
-  Artist artist;
+class CategoryPage extends StatefulWidget {
+  Category category;
 
-  ArtistPage({super.key, required this.artist});
+  CategoryPage({super.key, required this.category});
 
   @override
-  State<ArtistPage> createState() => _ArtistState();
+  State<CategoryPage> createState() => _ArtistState();
 }
 
-class _ArtistState extends State<ArtistPage> {
+class _ArtistState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +39,7 @@ class _ArtistState extends State<ArtistPage> {
             AppBar(
               backgroundColor: Colors.transparent,
               title: Text(
-                "Artist",
+                widget.category.title,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.inversePrimary,
                   fontWeight: FontWeight.bold,
@@ -47,88 +47,57 @@ class _ArtistState extends State<ArtistPage> {
               ),
             ),
             SizedBox(height: 10),
-            CircleAvatar(
-              radius: 80,
-              backgroundColor: !Provider.of<FollowProvider>(context,listen: false).follow.contains(widget.artist)?Theme.of(context).colorScheme.tertiary:Colors.green,
-              child: CircleAvatar(
-                radius: 75,
-                foregroundImage: NetworkImage(widget.artist.imageUrl),
+            Container(
+              height: 180,
+              width: 180,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.green, width: 2),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  widget.category.imageUrl,
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
             SizedBox(height: 10),
-            Text(
-              widget.artist.name,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.inversePrimary,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              width: 165,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (!Provider.of<FollowProvider>(
+            IconButton(
+              onPressed: () {
+                if (!Provider.of<PlaylistProvider>(
+                  context,
+                  listen: false,
+                ).addPlaylist.contains(widget.category)) {
+                  Provider.of<PlaylistProvider>(
                     context,
                     listen: false,
-                  ).follow.contains(widget.artist)) {
-                    Provider.of<FollowProvider>(
+                  ).addingPlaylist(widget.category);
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text("Added to playlist")));
+                } else {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text("Already Added")));
+                }
+                setState(() {});
+              },
+              icon: Icon(
+                !Provider.of<PlaylistProvider>(
                       context,
                       listen: false,
-                    ).addArtist(widget.artist);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Followed ${widget.artist.name}")),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Already followed ${widget.artist.name}"),
-                      ),
-                    );
-                  }
-                  setState(() {});
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      !Provider.of<FollowProvider>(
-                            context,
-                            listen: false,
-                          ).follow.contains(widget.artist)
-                          ? Theme.of(context).colorScheme.tertiary
-                          : Colors.green,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      !Provider.of<FollowProvider>(
-                            context,
-                            listen: false,
-                          ).follow.contains(widget.artist)
-                          ? "Follow"
-                          : "Followed",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontSize: 22,
-                      ),
-                    ),
-                    SizedBox(width: 5),
-                    Icon(
-                      !Provider.of<FollowProvider>(
-                            context,
-                            listen: false,
-                          ).follow.contains(widget.artist)
-                          ? Icons.add
-                          : Icons.verified_outlined,
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      size: 20,
-                    ),
-                  ],
-                ),
+                    ).addPlaylist.contains(widget.category)
+                    ? Icons.add_circle_outlined
+                    : Icons.verified,
+                size: 60,
+                color:
+                    !Provider.of<PlaylistProvider>(
+                          context,
+                          listen: false,
+                        ).addPlaylist.contains(widget.category)
+                        ? Theme.of(context).colorScheme.inversePrimary
+                        : Colors.green,
               ),
             ),
             SizedBox(height: 10),
@@ -141,7 +110,7 @@ class _ArtistState extends State<ArtistPage> {
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.inversePrimary,
                       fontSize: 20,
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -150,16 +119,16 @@ class _ArtistState extends State<ArtistPage> {
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: widget.artist.songs.length,
+                itemCount: widget.category.music.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(widget.artist.songs[index].label),
-                    subtitle: Text(widget.artist.songs[index].artist),
+                    title: Text(widget.category.music[index].label),
+                    subtitle: Text(widget.category.music[index].artist),
                     leading: SizedBox(
                       height: 50,
                       width: 50,
                       child: Image.network(
-                        widget.artist.songs[index].imageUrl,
+                        widget.category.music[index].imageUrl,
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -171,11 +140,11 @@ class _ArtistState extends State<ArtistPage> {
                             if (!Provider.of<FavoriteProvider>(
                               context,
                               listen: false,
-                            ).favorite.contains(widget.artist.songs[index])) {
+                            ).favorite.contains(widget.category.music[index])) {
                               Provider.of<FavoriteProvider>(
                                 context,
                                 listen: false,
-                              ).addFavorite(widget.artist.songs[index]);
+                              ).addFavorite(widget.category.music[index]);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("Added to favorite")),
                               );
@@ -193,7 +162,9 @@ class _ArtistState extends State<ArtistPage> {
                                 Provider.of<FavoriteProvider>(
                                       context,
                                       listen: false,
-                                    ).favorite.contains(widget.artist.songs[index])
+                                    ).favorite.contains(
+                                      widget.category.music[index],
+                                    )
                                     ? Colors.red
                                     : Theme.of(
                                       context,
@@ -205,7 +176,9 @@ class _ArtistState extends State<ArtistPage> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return MusicPlayer(playing: widget.artist.songs[index]);
+                                  return MusicPlayer(
+                                    playing: widget.category.music[index],
+                                  );
                                 },
                               ),
                             );

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spotify_clone/provider/favorite_provider.dart';
 import 'package:spotify_clone/model/music.dart';
-
 import 'music_player.dart';
 
 class Favorite extends StatefulWidget {
@@ -49,6 +48,7 @@ class _FavoriteState extends State<Favorite> {
             ),
             Expanded(
               child: GridView.builder(
+                padding: EdgeInsets.zero,
                 itemCount: favorite.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,

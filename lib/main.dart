@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/provider/favorite_provider.dart';
 import 'package:spotify_clone/provider/follow_provider.dart';
+import 'package:spotify_clone/provider/playlist_provider.dart';
 import 'package:spotify_clone/screen/home.dart';
 import 'package:spotify_clone/screen/library.dart';
 import 'package:spotify_clone/screen/search.dart';
@@ -16,7 +17,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
-        ChangeNotifierProvider(create: (context) =>FollowProvider())
+        ChangeNotifierProvider(create: (context) =>FollowProvider()),
+        ChangeNotifierProvider(create: (context) =>PlaylistProvider())
       ],
       child: MyApp(),
     ),

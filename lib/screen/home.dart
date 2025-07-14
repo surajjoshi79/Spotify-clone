@@ -3,6 +3,7 @@ import 'package:spotify_clone/model/category.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/model/music.dart';
 import 'package:spotify_clone/screen/artist_page.dart';
+import 'package:spotify_clone/screen/category_page.dart';
 import 'package:spotify_clone/screen/music_player.dart';
 import 'package:spotify_clone/screen/setting.dart';
 import 'package:spotify_clone/service/artist_service.dart';
@@ -20,19 +21,21 @@ class _HomeState extends State<Home> {
   String message = 'Good morning';
   List<Category> category = CategoryService.getCategory();
   List<Music> music = MusicService.getMusic();
+  List<Music> madeForYou=MusicService.getMadeForYou();
   List<Artist> artist = ArtistService.getArtist();
 
-  Widget createMusicList() {
+  Widget createMusicList(List<Music> list) {
     return SizedBox(
       height: 260,
       child: ListView.builder(
-        itemCount: music.length,
+        padding: EdgeInsets.zero,
+        itemCount: list.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                return MusicPlayer(playing: music[index]);
+                return MusicPlayer(playing: list[index]);
               }));
             },
             child: Padding(
@@ -48,13 +51,13 @@ class _HomeState extends State<Home> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          music[index].imageUrl,
+                          list[index].imageUrl,
                           fit: BoxFit.fill,
                         ),
                       ),
                     ),
                     Text(
-                      music[index].label,
+                      list[index].label,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.inversePrimary,
                         fontSize: 20,
@@ -62,7 +65,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Text(
-                      music[index].description,
+                      list[index].description,
                       style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 18),
                     ),
                   ],
@@ -148,8 +151,9 @@ class _HomeState extends State<Home> {
                 ],
               ),
               SizedBox(
-                height: 320,
+                height: 260,
                 child: GridView.builder(
+                  padding: EdgeInsets.zero,
                   itemCount: 6,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -160,35 +164,42 @@ class _HomeState extends State<Home> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.tertiary,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              height: 80,
-                              width: 60,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  bottomLeft: Radius.circular(5),
-                                ),
-                                child: Icon(Icons.add),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                category[index].title,
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.inversePrimary,
-                                  fontSize: 16,
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                            return CategoryPage(category: category[index]);
+                          }));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.tertiary,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: 80,
+                                width: 60,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(5),
+                                    bottomLeft: Radius.circular(5),
+                                  ),
+                                  child: Image.network(category[index].imageUrl,fit: BoxFit.fill),
                                 ),
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  category[index].title,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.inversePrimary,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -206,11 +217,11 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              createMusicList(),
+              createMusicList(music),
               Padding(
                 padding: const EdgeInsets.only(left: 8, bottom: 20),
                 child: Text(
-                  "Popular playlist",
+                  "Popular songs",
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.inversePrimary,
                     fontSize: 24,
@@ -218,7 +229,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              createMusicList(),
+              createMusicList(madeForYou),
               Padding(
                 padding: const EdgeInsets.only(left: 8, bottom: 20),
                 child: Text(

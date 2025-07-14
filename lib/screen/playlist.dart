@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_clone/model/artist.dart';
-import 'package:spotify_clone/provider/follow_provider.dart';
+import 'package:spotify_clone/model/category.dart';
 import 'package:provider/provider.dart';
-import 'package:spotify_clone/screen/artist_page.dart';
+import 'package:spotify_clone/provider/playlist_provider.dart';
+import 'package:spotify_clone/screen/category_page.dart';
 
-class Followed extends StatefulWidget {
-  const Followed({super.key});
+class Playlist extends StatefulWidget {
+  const Playlist({super.key});
 
   @override
-  State<Followed> createState() => _FollowedState();
+  State<Playlist> createState() => _FollowedState();
 }
 
-class _FollowedState extends State<Followed> {
-  List<Artist> followed = [];
+class _FollowedState extends State<Playlist> {
+  List<Category> playlist = [];
 
   @override
   Widget build(BuildContext context) {
-    followed = Provider.of<FollowProvider>(context).getArtist();
+    playlist = Provider.of<PlaylistProvider>(context).getPlaylist();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
@@ -39,7 +39,7 @@ class _FollowedState extends State<Followed> {
             AppBar(
               backgroundColor: Colors.transparent,
               title: Text(
-                "Followed",
+                "Playlist",
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.inversePrimary,
                   fontWeight: FontWeight.bold,
@@ -49,7 +49,7 @@ class _FollowedState extends State<Followed> {
             Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: followed.length,
+                itemCount: playlist.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisExtent: 280,
@@ -60,7 +60,7 @@ class _FollowedState extends State<Followed> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return ArtistPage(artist: followed[index]);
+                            return CategoryPage(category: playlist[index]);
                           },
                         ),
                       );
@@ -77,19 +77,19 @@ class _FollowedState extends State<Followed> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  followed[index].imageUrl,
+                                  playlist[index].imageUrl,
                                   fit: BoxFit.fill,
                                 ),
                               ),
                             ),
                             SizedBox(height: 10),
                             Text(
-                              followed[index].name,
+                              playlist[index].title,
                               style: TextStyle(
                                 color:
-                                    Theme.of(
-                                      context,
-                                    ).colorScheme.inversePrimary,
+                                Theme.of(
+                                  context,
+                                ).colorScheme.inversePrimary,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
