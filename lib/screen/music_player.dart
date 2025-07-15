@@ -2,17 +2,75 @@ import 'package:flutter/material.dart';
 import 'package:spotify_clone/provider/favorite_provider.dart';
 import 'package:spotify_clone/model/music.dart';
 import 'package:provider/provider.dart';
+import 'package:just_audio/just_audio.dart';
+import '../utils.dart';
 
 class MusicPlayer extends StatefulWidget {
-  Music playing;
-
-  MusicPlayer({super.key, required this.playing});
+  List<Music> playing;
+  int current;
+  MusicPlayer({super.key, required this.playing, required this.current});
 
   @override
   State<MusicPlayer> createState() => _MusicPlayerState();
 }
 
 class _MusicPlayerState extends State<MusicPlayer> {
+  Duration position=Duration.zero;
+  Duration duration=Duration.zero;
+
+  String formatDuration(Duration d){
+    final minutes=d.inMinutes.remainder(60);
+    final seconds=d.inSeconds.remainder(60);
+    return "${minutes.toString().padLeft(2,'0')}:${seconds.toString().padLeft(2,'0')}";
+  }
+
+  void handlePlayPause(){
+    if(player.playing){
+      player.pause();
+    }else{
+      player.play();
+    }
+  }
+
+  void handleSeek(double values){
+    player.seek(Duration(seconds: values.toInt()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      if(player.playing) {
+        player.pause();
+      }
+      player.setUrl(widget.playing[widget.current].audioUrl);
+      player.play();
+      player.setLoopMode(LoopMode.one);
+      player.positionStream.listen((p){
+        setState(() {
+          position=p;
+        });
+      });
+      player.durationStream.listen((d){
+        setState(() {
+          duration=d!;
+        });
+      });
+      player.playerStateStream.listen((state){
+        if(state.processingState == ProcessingState.completed){
+          setState(() {
+            position=Duration.zero;
+          });
+          player.pause();
+          player.seek(position);
+        }
+      });
+      
+    }catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Can't play")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,14 +119,14 @@ class _MusicPlayerState extends State<MusicPlayer> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    widget.playing.imageUrl,
+                    widget.playing[widget.current].imageUrl,
                     fit: BoxFit.fill,
                   ),
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height / 8),
               Text(
-                widget.playing.label,
+                widget.playing[widget.current].label,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -76,7 +134,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                 ),
               ),
               Text(
-                widget.playing.artist,
+                widget.playing[widget.current].artist,
                 style: TextStyle(
                   fontSize: 20,
                   color: Theme.of(context).colorScheme.inversePrimary,
@@ -84,8 +142,11 @@ class _MusicPlayerState extends State<MusicPlayer> {
               ),
               SizedBox(height: 10),
               Slider(
-                value: 0.3,
-                onChanged: (value) {},
+                secondaryTrackValue: player.bufferedPosition.inSeconds.toDouble(),
+                min: 0.0,
+                max: duration.inSeconds.toDouble(),
+                value: position.inSeconds.toDouble(),
+                onChanged: handleSeek,
                 inactiveColor: Theme.of(context).colorScheme.inversePrimary,
                 activeColor: Colors.green,
               ),
@@ -95,13 +156,13 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "0:00",
+                      formatDuration(position),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.inversePrimary,
                       ),
                     ),
                     Text(
-                      widget.playing.duration,
+                      formatDuration(duration),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.inversePrimary,
                       ),
@@ -117,19 +178,29 @@ class _MusicPlayerState extends State<MusicPlayer> {
                     icon: Icon(Icons.info, size: 40),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                        return MusicPlayer(playing: widget.playing, current: widget.current!=0?widget.current-1:widget.playing.length-1);
+                      }));
+                    },
                     icon: Icon(Icons.skip_previous, size: 40),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: handlePlayPause,
                     icon: Icon(
-                      Icons.pause_circle,
+                      player.playing?Icons.pause_circle:Icons.play_circle,
                       size: 60,
                       color: Colors.green,
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                        return MusicPlayer(playing: widget.playing, current: (widget.current+1)%widget.playing.length);
+                      }));
+                    },
                     icon: Icon(Icons.skip_next, size: 40),
                   ),
                   IconButton(
@@ -137,11 +208,11 @@ class _MusicPlayerState extends State<MusicPlayer> {
                       if (!Provider.of<FavoriteProvider>(
                         context,
                         listen: false,
-                      ).favorite.contains(widget.playing)) {
+                      ).favorite.contains(widget.playing[widget.current])) {
                         Provider.of<FavoriteProvider>(
                           context,
                           listen: false,
-                        ).addFavorite(widget.playing);
+                        ).addFavorite(widget.playing[widget.current]);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Added to favorite")),
                         );

@@ -158,7 +158,7 @@ class _LibraryState extends State<Library> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return MusicPlayer(playing: music[index]);
+                            return MusicPlayer(playing: music,current: index);
                           },
                         ),
                       );

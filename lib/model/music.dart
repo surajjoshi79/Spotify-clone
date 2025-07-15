@@ -3,12 +3,12 @@ class Music{
   String description;
   String imageUrl;
   String artist;
-  String duration;
+  String audioUrl;
   Music({
     required this.label,
     required this.description,
     required this.imageUrl,
     required this.artist,
-    required this.duration
+    required this.audioUrl
   });
 }

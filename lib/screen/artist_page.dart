@@ -205,7 +205,7 @@ class _ArtistState extends State<ArtistPage> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return MusicPlayer(playing: widget.artist.songs[index]);
+                                  return MusicPlayer(playing: widget.artist.songs,current: index);
                                 },
                               ),
                             );

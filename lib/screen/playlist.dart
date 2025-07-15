@@ -34,7 +34,7 @@ class _FollowedState extends State<Playlist> {
           ),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: playlist.isEmpty?CrossAxisAlignment.center:CrossAxisAlignment.start,
           children: [
             AppBar(
               backgroundColor: Colors.transparent,
@@ -46,6 +46,15 @@ class _FollowedState extends State<Playlist> {
                 ),
               ),
             ),
+            playlist.isEmpty?
+            Padding(
+              padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/3),
+              child: SizedBox(
+                width: 170,
+                height: 170,
+                child: Image.network("https://imgs.search.brave.com/G2bR1jC9V5bid7m57_BgK5b0mm4X5qV06ZoSLki9Xb8/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG5p/Lmljb25zY291dC5j/b20vaWxsdXN0cmF0/aW9uL3ByZW1pdW0v/dGh1bWIvZW1wdHkt/d2lzaGxpc3QtaWxs/dXN0cmF0aW9uLWRv/d25sb2FkLWluLXN2/Zy1wbmctZ2lmLWZp/bGUtZm9ybWF0cy0t/b25saW5lLXNob3At/c3RvcmUtc2hvcHBp/bmctc2l0ZS1tYXJr/ZXRwbGFjZS1zdGF0/ZXMtcGFjay13aW5k/b3dzLWludGVyZmFj/ZS1pbGx1c3RyYXRp/b25zLTk4MjQ0NzEu/cG5n"),
+              ),
+            ):
             Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.zero,

@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
           return GestureDetector(
             onTap: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                return MusicPlayer(playing: list[index]);
+                return MusicPlayer(playing: list,current: index);
               }));
             },
             child: Padding(

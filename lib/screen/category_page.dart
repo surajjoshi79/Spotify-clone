@@ -47,58 +47,62 @@ class _ArtistState extends State<CategoryPage> {
               ),
             ),
             SizedBox(height: 10),
-            Container(
-              height: 180,
-              width: 180,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.green, width: 2),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  widget.category.imageUrl,
-                  fit: BoxFit.fill,
+            Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Container(
+                  height: 180,
+                  width: 180,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.green, width: 2),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      widget.category.imageUrl,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(height: 10),
-            IconButton(
-              onPressed: () {
-                if (!Provider.of<PlaylistProvider>(
-                  context,
-                  listen: false,
-                ).addPlaylist.contains(widget.category)) {
-                  Provider.of<PlaylistProvider>(
-                    context,
-                    listen: false,
-                  ).addingPlaylist(widget.category);
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text("Added to playlist")));
-                } else {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text("Already Added")));
-                }
-                setState(() {});
-              },
-              icon: Icon(
-                !Provider.of<PlaylistProvider>(
+                IconButton(
+                  onPressed: () {
+                    if (!Provider.of<PlaylistProvider>(
+                      context,
+                      listen: false,
+                    ).addPlaylist.contains(widget.category)) {
+                      Provider.of<PlaylistProvider>(
+                        context,
+                        listen: false,
+                      ).addingPlaylist(widget.category);
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text("Added to playlist")));
+                    } else {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text("Already Added")));
+                    }
+                    setState(() {});
+                  },
+                  icon: Icon(
+                    !Provider.of<PlaylistProvider>(
                       context,
                       listen: false,
                     ).addPlaylist.contains(widget.category)
-                    ? Icons.add_circle_outlined
-                    : Icons.verified,
-                size: 60,
-                color:
+                        ? Icons.add_circle_outlined
+                        : Icons.verified,
+                    size: 60,
+                    color:
                     !Provider.of<PlaylistProvider>(
-                          context,
-                          listen: false,
-                        ).addPlaylist.contains(widget.category)
+                      context,
+                      listen: false,
+                    ).addPlaylist.contains(widget.category)
                         ? Theme.of(context).colorScheme.inversePrimary
                         : Colors.green,
-              ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 10),
             Row(
@@ -177,7 +181,8 @@ class _ArtistState extends State<CategoryPage> {
                               MaterialPageRoute(
                                 builder: (context) {
                                   return MusicPlayer(
-                                    playing: widget.category.music[index],
+                                    playing: widget.category.music,
+                                    current: index,
                                   );
                                 },
                               ),
