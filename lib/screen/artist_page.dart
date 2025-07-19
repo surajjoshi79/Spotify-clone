@@ -4,11 +4,12 @@ import 'package:spotify_clone/screen/music_player.dart';
 import 'package:provider/provider.dart';
 import '../provider/favorite_provider.dart';
 import 'package:spotify_clone/provider/follow_provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class ArtistPage extends StatefulWidget {
-  Artist artist;
+  final Artist artist;
 
-  ArtistPage({super.key, required this.artist});
+  const ArtistPage({super.key, required this.artist});
 
   @override
   State<ArtistPage> createState() => _ArtistState();
@@ -161,6 +162,17 @@ class _ArtistState extends State<ArtistPage> {
                       child: Image.network(
                         widget.artist.songs[index].imageUrl,
                         fit: BoxFit.fill,
+                        loadingBuilder: (context, child, loadingProgress,) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Shimmer(
+                              duration: Duration(milliseconds: 100),
+                              interval: Duration(milliseconds: 50),
+                              child: Container(color: Colors.grey),
+                            );
+                          }
+                        },
                       ),
                     ),
                     trailing: Row(

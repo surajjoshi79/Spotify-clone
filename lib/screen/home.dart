@@ -9,6 +9,7 @@ import 'package:spotify_clone/screen/setting.dart';
 import 'package:spotify_clone/service/artist_service.dart';
 import 'package:spotify_clone/service/category_service.dart';
 import 'package:spotify_clone/service/music_service.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,7 +22,7 @@ class _HomeState extends State<Home> {
   String message = 'Good morning';
   List<Category> category = CategoryService.getCategory();
   List<Music> music = MusicService.getMusic();
-  List<Music> madeForYou=MusicService.getMadeForYou();
+  List<Music> madeForYou = MusicService.getMadeForYou();
   List<Artist> artist = ArtistService.getArtist();
 
   Widget createMusicList(List<Music> list) {
@@ -33,10 +34,14 @@ class _HomeState extends State<Home> {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                return MusicPlayer(playing: list,current: index);
-              }));
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return MusicPlayer(playing: list, current: index);
+                  },
+                ),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -53,6 +58,17 @@ class _HomeState extends State<Home> {
                         child: Image.network(
                           list[index].imageUrl,
                           fit: BoxFit.fill,
+                          loadingBuilder: (context, child, loadingProgress,) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Shimmer(
+                                duration: Duration(milliseconds: 100),
+                                interval: Duration(milliseconds: 50),
+                                child: Container(color: Colors.grey),
+                              );
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -66,7 +82,12 @@ class _HomeState extends State<Home> {
                     ),
                     Text(
                       list[index].description,
-                      style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 18),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontSize: 18,
+                      ),
                     ),
                   ],
                 ),
@@ -138,9 +159,13 @@ class _HomeState extends State<Home> {
                     padding: const EdgeInsets.only(right: 10),
                     child: IconButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                          return Setting();
-                        }));
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Setting();
+                            },
+                          ),
+                        );
                       },
                       icon: Icon(
                         Icons.settings_outlined,
@@ -165,10 +190,14 @@ class _HomeState extends State<Home> {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                            return CategoryPage(category: category[index]);
-                          }));
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return CategoryPage(category: category[index]);
+                              },
+                            ),
+                          );
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -185,7 +214,21 @@ class _HomeState extends State<Home> {
                                     topLeft: Radius.circular(5),
                                     bottomLeft: Radius.circular(5),
                                   ),
-                                  child: Image.network(category[index].imageUrl,fit: BoxFit.fill),
+                                  child: Image.network(
+                                    category[index].imageUrl,
+                                    fit: BoxFit.fill,
+                                    loadingBuilder: (context, child, loadingProgress,) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Shimmer(
+                                          duration: Duration(milliseconds: 100),
+                                          interval: Duration(milliseconds: 50),
+                                          child: Container(color: Colors.grey),
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -193,7 +236,10 @@ class _HomeState extends State<Home> {
                                 child: Text(
                                   category[index].title,
                                   style: TextStyle(
-                                    color: Theme.of(context).colorScheme.inversePrimary,
+                                    color:
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.inversePrimary,
                                     fontSize: 16,
                                   ),
                                 ),
@@ -250,10 +296,14 @@ class _HomeState extends State<Home> {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                            return ArtistPage(artist: artist[index]);
-                          }));
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ArtistPage(artist: artist[index]);
+                              },
+                            ),
+                          );
                         },
                         child: SizedBox(
                           width: 160,
@@ -272,7 +322,10 @@ class _HomeState extends State<Home> {
                               Text(
                                 artist[index].name,
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.inversePrimary,
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.inversePrimary,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),

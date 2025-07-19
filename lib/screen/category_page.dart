@@ -4,11 +4,12 @@ import 'package:spotify_clone/screen/music_player.dart';
 import 'package:provider/provider.dart';
 import '../provider/favorite_provider.dart';
 import '../provider/playlist_provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class CategoryPage extends StatefulWidget {
-  Category category;
+  final Category category;
 
-  CategoryPage({super.key, required this.category});
+  const CategoryPage({super.key, required this.category});
 
   @override
   State<CategoryPage> createState() => _ArtistState();
@@ -62,6 +63,17 @@ class _ArtistState extends State<CategoryPage> {
                     child: Image.network(
                       widget.category.imageUrl,
                       fit: BoxFit.fill,
+                      loadingBuilder: (context, child, loadingProgress,) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return Shimmer(
+                            duration: Duration(milliseconds: 100),
+                            interval: Duration(milliseconds: 50),
+                            child: Container(color: Colors.grey),
+                          );
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -134,6 +146,17 @@ class _ArtistState extends State<CategoryPage> {
                       child: Image.network(
                         widget.category.music[index].imageUrl,
                         fit: BoxFit.fill,
+                        loadingBuilder: (context, child, loadingProgress,) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Shimmer(
+                              duration: Duration(milliseconds: 100),
+                              interval: Duration(milliseconds: 50),
+                              child: Container(color: Colors.grey),
+                            );
+                          }
+                        },
                       ),
                     ),
                     trailing: Row(

@@ -4,11 +4,12 @@ import 'package:spotify_clone/model/music.dart';
 import 'package:provider/provider.dart';
 import 'package:just_audio/just_audio.dart';
 import '../utils.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class MusicPlayer extends StatefulWidget {
-  List<Music> playing;
-  int current;
-  MusicPlayer({super.key, required this.playing, required this.current});
+  final List<Music> playing;
+  final int current;
+  const MusicPlayer({super.key, required this.playing, required this.current});
 
   @override
   State<MusicPlayer> createState() => _MusicPlayerState();
@@ -112,7 +113,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   ),
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height / 7),
+              SizedBox(height: MediaQuery.of(context).size.height / 10),
               SizedBox(
                 height: 320,
                 width: 320,
@@ -121,10 +122,21 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   child: Image.network(
                     widget.playing[widget.current].imageUrl,
                     fit: BoxFit.fill,
+                    loadingBuilder: (context, child, loadingProgress,) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return Shimmer(
+                          duration: Duration(seconds: 1),
+                          interval: Duration(seconds: 0),
+                          child: Container(color: Colors.grey),
+                        );
+                      }
+                    },
                   ),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height / 8),
+              SizedBox(height: MediaQuery.of(context).size.height / 10),
               Text(
                 widget.playing[widget.current].label,
                 style: TextStyle(
@@ -205,10 +217,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   ),
                   IconButton(
                     onPressed: () {
-                      if (!Provider.of<FavoriteProvider>(
-                        context,
-                        listen: false,
-                      ).favorite.contains(widget.playing[widget.current])) {
+                      if (!Provider.of<FavoriteProvider>(context, listen: false,).favorite.contains(widget.playing[widget.current])) {
                         Provider.of<FavoriteProvider>(
                           context,
                           listen: false,
@@ -227,16 +236,79 @@ class _MusicPlayerState extends State<MusicPlayer> {
                       Icons.favorite,
                       size: 35,
                       color:
-                          Provider.of<FavoriteProvider>(
-                                context,
-                                listen: false,
-                              ).favorite.contains(widget.playing)
-                              ? Colors.red
-                              : Theme.of(context).colorScheme.inversePrimary,
+                          Provider.of<FavoriteProvider>(context,listen: false,).favorite.contains(widget.playing[widget.current]) ? Colors.red : Theme.of(context).colorScheme.inversePrimary,
                     ),
                   ),
                 ],
               ),
+              Container(
+                height: 80,
+                margin: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.tertiary,
+                  borderRadius: BorderRadius.circular(8)
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 80,
+                      width: 85,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          bottomLeft: Radius.circular(5),
+                        ),
+                        child: Image.network(
+                          widget.playing[(widget.current+1)%widget.playing.length].imageUrl,
+                          fit: BoxFit.fill,
+                          loadingBuilder: (context, child, loadingProgress,) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Shimmer(
+                                duration: Duration(milliseconds: 100),
+                                interval: Duration(milliseconds: 50),
+                                child: Container(color: Colors.grey),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          widget.playing[(widget.current+1)%widget.playing.length].label,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        SizedBox(
+                          width: 120,
+                          child: Text(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            widget.playing[(widget.current+1)%widget.playing.length].artist,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Icon(Icons.arrow_forward,color:Theme.of(context).colorScheme.primary),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ),

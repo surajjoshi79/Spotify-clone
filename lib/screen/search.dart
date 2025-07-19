@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_clone/screen/result_page.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});
@@ -8,6 +9,8 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  TextEditingController music=TextEditingController();
+  FocusNode fn=FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +35,8 @@ class _SearchState extends State<Search> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               child: TextField(
+                controller: music,
+                focusNode: fn,
                 textCapitalization: TextCapitalization.sentences,
                 style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 18),
                 cursorColor: Theme.of(context).colorScheme.inversePrimary,
@@ -41,7 +46,20 @@ class _SearchState extends State<Search> {
                   hintText: "What do you want to listen?",
                   hintStyle: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontSize: 18),
                   prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.inversePrimary),
-                  suffixIcon: Icon(Icons.close, color: Theme.of(context).colorScheme.inversePrimary),
+                  suffixIcon: IconButton(onPressed: (){
+                    if(music.text.trim().isNotEmpty){
+                      String search=music.text.trim();
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                        return ResultPage(search:search);
+                      }));
+                    }else{
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Can't search")));
+                    }
+                    setState(() {
+                      music.clear();
+                      fn.unfocus();
+                    });
+                  }, icon: Icon(Icons.send)),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: BorderSide(style: BorderStyle.none),

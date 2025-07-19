@@ -60,7 +60,7 @@ class _SettingState extends State<Setting> {
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   CupertinoSwitch(
-                      value: sharedPreferences.sharedPreferences!.getBool("isDark")??true,
+                      value: sharedPreferences.sharedPreferences.getBool("isDark")??true,
                       onChanged: (value) {
                         Provider.of<ThemeProvider>(context,listen: false).toggleTheme();
                       }

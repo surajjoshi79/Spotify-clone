@@ -104,6 +104,8 @@ class _FavoriteState extends State<Favorite> {
                             ),
                             Text(
                               favorite[index].artist,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color:
                                     Theme.of(
