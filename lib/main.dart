@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_clone/provider/favorite_provider.dart';
-import 'package:spotify_clone/provider/follow_provider.dart';
-import 'package:spotify_clone/provider/playlist_provider.dart';
+import 'package:flutter/services.dart';
+import 'package:spotify_clone/model/artist.dart';
+import 'package:spotify_clone/model/category.dart';
+import 'package:spotify_clone/model/music.dart';
 import 'package:spotify_clone/screen/app.dart';
 import 'package:spotify_clone/provider/theme_provider.dart';
 import 'package:spotify_clone/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_animation_progress_bar/simple_animation_progress_bar.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   await sharedPreferences.init();
+  await Hive.initFlutter();
+  Hive.registerAdapter(MusicAdapter());
+  Hive.registerAdapter(ArtistAdapter());
+  Hive.registerAdapter(CategoryAdapter());
+  await Hive.openBox("favoriteBox");
+  await Hive.openBox("followedBox");
+  await Hive.openBox("playlistBox");
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => ThemeProvider()),
-        ChangeNotifierProvider(create: (context) => FavoriteProvider()),
-        ChangeNotifierProvider(create: (context) => FollowProvider()),
-        ChangeNotifierProvider(create: (context) => PlaylistProvider()),
-      ],
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
       child: const MyApp(),
     ),
   );

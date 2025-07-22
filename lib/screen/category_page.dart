@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/model/category.dart';
 import 'package:spotify_clone/screen/music_player.dart';
-import 'package:provider/provider.dart';
-import '../provider/favorite_provider.dart';
-import '../provider/playlist_provider.dart';
+import 'package:spotify_clone/utils.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class CategoryPage extends StatefulWidget {
   final Category category;
@@ -79,39 +78,41 @@ class _ArtistState extends State<CategoryPage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    if (!Provider.of<PlaylistProvider>(
-                      context,
-                      listen: false,
-                    ).addPlaylist.contains(widget.category)) {
-                      Provider.of<PlaylistProvider>(
-                        context,
-                        listen: false,
-                      ).addingPlaylist(widget.category);
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text("Added to playlist")));
+                    if (!playlistBox.containsKey(widget.category.title)) {
+                      playlistBox.put(widget.category.title,widget.category);
+                      final snackBar = SnackBar(
+                        elevation: 0,
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.transparent,
+                        content: AwesomeSnackbarContent(
+                          title: 'Yohoooo!',
+                          message:
+                          'Added to playlist ${widget.category.title}',
+                          contentType: ContentType.success,
+                        ),
+                      );
+                      ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                     } else {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text("Already Added")));
+                      final snackBar = SnackBar(
+                        elevation: 0,
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.transparent,
+                        content: AwesomeSnackbarContent(
+                          title: 'oh snap!',
+                          message:
+                          'Already added to playlist ${widget.category.title}',
+                          contentType: ContentType.warning,
+                        ),
+                      );
+                      ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                     }
                     setState(() {});
                   },
                   icon: Icon(
-                    !Provider.of<PlaylistProvider>(
-                      context,
-                      listen: false,
-                    ).addPlaylist.contains(widget.category)
-                        ? Icons.add_circle_outlined
-                        : Icons.verified,
+                    !playlistBox.containsKey(widget.category.title) ? Icons.add_circle_outlined : Icons.verified,
                     size: 60,
                     color:
-                    !Provider.of<PlaylistProvider>(
-                      context,
-                      listen: false,
-                    ).addPlaylist.contains(widget.category)
-                        ? Theme.of(context).colorScheme.inversePrimary
-                        : Colors.green,
+                    !playlistBox.containsKey(widget.category.title) ? Theme.of(context).colorScheme.inversePrimary : Colors.green,
                   ),
                 ),
               ],
@@ -164,38 +165,40 @@ class _ArtistState extends State<CategoryPage> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            if (!Provider.of<FavoriteProvider>(
-                              context,
-                              listen: false,
-                            ).favorite.contains(widget.category.music[index])) {
-                              Provider.of<FavoriteProvider>(
-                                context,
-                                listen: false,
-                              ).addFavorite(widget.category.music[index]);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Added to favorite")),
+                            if (!favoriteBox.containsKey(widget.category.music[index].label)) {
+                              favoriteBox.put(widget.category.music[index].label, widget.category.music[index]);
+                              final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Yohoooo!',
+                                  message:
+                                  'Added to favorite ${widget.category.music[index].label}',
+                                  contentType: ContentType.success,
+                                ),
                               );
-                              setState(() {});
+                              ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Already Added")),
+                              final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Opssss!',
+                                  message:
+                                  'Already added to favorite ${widget.category.music[index].label}',
+                                  contentType: ContentType.warning,
+                                ),
                               );
+                              ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                             }
                             setState(() {});
                           },
                           icon: Icon(
                             Icons.favorite,
                             color:
-                                Provider.of<FavoriteProvider>(
-                                      context,
-                                      listen: false,
-                                    ).favorite.contains(
-                                      widget.category.music[index],
-                                    )
-                                    ? Colors.red
-                                    : Theme.of(
-                                      context,
-                                    ).colorScheme.inversePrimary,
+                            favoriteBox.containsKey(widget.category.music[index].label) ? Colors.red : Theme.of(context).colorScheme.inversePrimary,
                           ),
                         ),
                         IconButton(

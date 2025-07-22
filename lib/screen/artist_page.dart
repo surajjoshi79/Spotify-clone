@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/model/artist.dart';
 import 'package:spotify_clone/screen/music_player.dart';
-import 'package:provider/provider.dart';
-import '../provider/favorite_provider.dart';
-import 'package:spotify_clone/provider/follow_provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+
+import '../utils.dart';
 
 class ArtistPage extends StatefulWidget {
   final Artist artist;
@@ -50,7 +50,7 @@ class _ArtistState extends State<ArtistPage> {
             SizedBox(height: 10),
             CircleAvatar(
               radius: 80,
-              backgroundColor: !Provider.of<FollowProvider>(context,listen: false).follow.contains(widget.artist)?Theme.of(context).colorScheme.tertiary:Colors.green,
+              backgroundColor: !followBox.containsKey(widget.artist.name)?Theme.of(context).colorScheme.tertiary:Colors.green,
               child: CircleAvatar(
                 radius: 75,
                 foregroundImage: NetworkImage(widget.artist.imageUrl),
@@ -70,34 +70,39 @@ class _ArtistState extends State<ArtistPage> {
               width: 165,
               child: ElevatedButton(
                 onPressed: () {
-                  if (!Provider.of<FollowProvider>(
-                    context,
-                    listen: false,
-                  ).follow.contains(widget.artist)) {
-                    Provider.of<FollowProvider>(
-                      context,
-                      listen: false,
-                    ).addArtist(widget.artist);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Followed ${widget.artist.name}")),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Already followed ${widget.artist.name}"),
+                  if (!followBox.containsKey(widget.artist.name)) {
+                    followBox.put(widget.artist.name, widget.artist);
+                    final snackBar = SnackBar(
+                      elevation: 0,
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.transparent,
+                      content: AwesomeSnackbarContent(
+                        title: 'Yohoooo!',
+                        message:
+                        'You are following ${widget.artist.name}',
+                        contentType: ContentType.success,
                       ),
                     );
+                    ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+                  } else {
+                    final snackBar = SnackBar(
+                      elevation: 0,
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.transparent,
+                      content: AwesomeSnackbarContent(
+                        title: 'Opsssss!',
+                        message:
+                        'You are already following ${widget.artist.name}',
+                        contentType: ContentType.warning,
+                      ),
+                    );
+                    ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                   }
                   setState(() {});
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      !Provider.of<FollowProvider>(
-                            context,
-                            listen: false,
-                          ).follow.contains(widget.artist)
-                          ? Theme.of(context).colorScheme.tertiary
-                          : Colors.green,
+                  !followBox.containsKey(widget.artist.name) ? Theme.of(context).colorScheme.tertiary : Colors.green,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
@@ -106,12 +111,7 @@ class _ArtistState extends State<ArtistPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      !Provider.of<FollowProvider>(
-                            context,
-                            listen: false,
-                          ).follow.contains(widget.artist)
-                          ? "Follow"
-                          : "Followed",
+                      !followBox.containsKey(widget.artist.name) ? "Follow" : "Followed",
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.inversePrimary,
                         fontSize: 22,
@@ -119,12 +119,7 @@ class _ArtistState extends State<ArtistPage> {
                     ),
                     SizedBox(width: 5),
                     Icon(
-                      !Provider.of<FollowProvider>(
-                            context,
-                            listen: false,
-                          ).follow.contains(widget.artist)
-                          ? Icons.add
-                          : Icons.verified_outlined,
+                      !followBox.containsKey(widget.artist.name) ? Icons.add : Icons.verified_outlined,
                       color: Theme.of(context).colorScheme.inversePrimary,
                       size: 20,
                     ),
@@ -180,36 +175,41 @@ class _ArtistState extends State<ArtistPage> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            if (!Provider.of<FavoriteProvider>(
-                              context,
-                              listen: false,
-                            ).favorite.contains(widget.artist.songs[index])) {
-                              Provider.of<FavoriteProvider>(
-                                context,
-                                listen: false,
-                              ).addFavorite(widget.artist.songs[index]);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Added to favorite")),
+                            if (!favoriteBox.containsKey(widget.artist.songs[index].label)) {
+                              favoriteBox.put(widget.artist.songs[index].label,widget.artist.songs[index]);
+                              final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Yohoooo!',
+                                  message:
+                                  'Added to favorite ${widget.artist.songs[index].label}',
+                                  contentType: ContentType.success,
+                                ),
                               );
+                              ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                               setState(() {});
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Already Added")),
+                              final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Opsss!',
+                                  message:
+                                  'Already added to favorite ${widget.artist.songs[index].label}}',
+                                  contentType: ContentType.warning,
+                                ),
                               );
+                              ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                             }
                             setState(() {});
                           },
                           icon: Icon(
                             Icons.favorite,
                             color:
-                                Provider.of<FavoriteProvider>(
-                                      context,
-                                      listen: false,
-                                    ).favorite.contains(widget.artist.songs[index])
-                                    ? Colors.red
-                                    : Theme.of(
-                                      context,
-                                    ).colorScheme.inversePrimary,
+                            favoriteBox.containsKey(widget.artist.songs[index].label) ? Colors.red : Theme.of(context).colorScheme.inversePrimary,
                           ),
                         ),
                         IconButton(

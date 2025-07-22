@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_clone/provider/favorite_provider.dart';
 import 'package:spotify_clone/model/music.dart';
-import 'package:provider/provider.dart';
 import 'package:just_audio/just_audio.dart';
 import '../utils.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class MusicPlayer extends StatefulWidget {
   final List<Music> playing;
@@ -57,16 +56,6 @@ class _MusicPlayerState extends State<MusicPlayer> {
           duration=d!;
         });
       });
-      player.playerStateStream.listen((state){
-        if(state.processingState == ProcessingState.completed){
-          setState(() {
-            position=Duration.zero;
-          });
-          player.pause();
-          player.seek(position);
-        }
-      });
-      
     }catch(e){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Can't play")));
     }
@@ -217,26 +206,41 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   ),
                   IconButton(
                     onPressed: () {
-                      if (!Provider.of<FavoriteProvider>(context, listen: false,).favorite.contains(widget.playing[widget.current])) {
-                        Provider.of<FavoriteProvider>(
-                          context,
-                          listen: false,
-                        ).addFavorite(widget.playing[widget.current]);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Added to favorite")),
+                      if (!favoriteBox.containsKey(widget.playing[widget.current].label)) {
+                        favoriteBox.put(widget.playing[widget.current].label, widget.playing[widget.current]);
+                        final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: 'Yohoooo!',
+                            message:
+                            'Added to favorite ${widget.playing[widget.current].label}',
+                            contentType: ContentType.success,
+                          ),
                         );
+                        ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                         setState(() {});
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Already Added")),
+                        final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: 'Oh snap!',
+                            message:
+                            'Already added to favorite ${widget.playing[widget.current].label}',
+                            contentType: ContentType.warning,
+                          ),
                         );
+                        ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                       }
                     },
                     icon: Icon(
                       Icons.favorite,
                       size: 35,
                       color:
-                          Provider.of<FavoriteProvider>(context,listen: false,).favorite.contains(widget.playing[widget.current]) ? Colors.red : Theme.of(context).colorScheme.inversePrimary,
+                      favoriteBox.containsKey(widget.playing[widget.current].label) ? Colors.red : Theme.of(context).colorScheme.inversePrimary,
                     ),
                   ),
                 ],

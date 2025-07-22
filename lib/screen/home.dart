@@ -137,7 +137,7 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Spotify",
+                      "Vibeify",
                       style: TextStyle(
                         color: Colors.green,
                         fontWeight: FontWeight.bold,

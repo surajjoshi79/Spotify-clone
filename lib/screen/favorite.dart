@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:spotify_clone/provider/favorite_provider.dart';
 import 'package:spotify_clone/model/music.dart';
 import 'music_player.dart';
+import '../utils.dart';
 
 class Favorite extends StatefulWidget {
   const Favorite({super.key});
@@ -12,11 +11,11 @@ class Favorite extends StatefulWidget {
 }
 
 class _FavoriteState extends State<Favorite> {
-  List<Music> favorite = [];
+  List<Music> favorite= [];
 
   @override
   Widget build(BuildContext context) {
-    favorite = Provider.of<FavoriteProvider>(context).getFavorite();
+    favorite=List<Music>.from(favoriteBox.values.toList());
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
@@ -93,6 +92,8 @@ class _FavoriteState extends State<Favorite> {
                             ),
                             Text(
                               favorite[index].label,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color:
                                     Theme.of(

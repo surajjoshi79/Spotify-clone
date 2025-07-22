@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/model/category.dart';
-import 'package:provider/provider.dart';
-import 'package:spotify_clone/provider/playlist_provider.dart';
 import 'package:spotify_clone/screen/category_page.dart';
+import '../utils.dart';
 
 class Playlist extends StatefulWidget {
   const Playlist({super.key});
@@ -16,7 +15,7 @@ class _FollowedState extends State<Playlist> {
 
   @override
   Widget build(BuildContext context) {
-    playlist = Provider.of<PlaylistProvider>(context).getPlaylist();
+    playlist=List<Category>.from(playlistBox.values.toList());
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(

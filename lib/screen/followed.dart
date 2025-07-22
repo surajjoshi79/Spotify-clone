@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/model/artist.dart';
-import 'package:spotify_clone/provider/follow_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:spotify_clone/screen/artist_page.dart';
+import '../utils.dart';
 
 class Followed extends StatefulWidget {
   const Followed({super.key});
@@ -12,11 +11,11 @@ class Followed extends StatefulWidget {
 }
 
 class _FollowedState extends State<Followed> {
-  List<Artist> followed = [];
+  List<Artist> followed=[];
 
   @override
   Widget build(BuildContext context) {
-    followed = Provider.of<FollowProvider>(context).getArtist();
+    followed=List<Artist>.from(followBox.values.toList());
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
