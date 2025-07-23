@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
 
   Widget createMusicList(List<Music> list) {
     return SizedBox(
-      height: 260,
+      height: 270,
       child: ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: list.length,
