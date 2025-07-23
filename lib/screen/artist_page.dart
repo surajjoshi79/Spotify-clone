@@ -3,7 +3,8 @@ import 'package:spotify_clone/model/artist.dart';
 import 'package:spotify_clone/screen/music_player.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-
+import 'package:provider/provider.dart';
+import '../provider/mini_player_provider.dart';
 import '../utils.dart';
 
 class ArtistPage extends StatefulWidget {
@@ -214,6 +215,7 @@ class _ArtistState extends State<ArtistPage> {
                         ),
                         IconButton(
                           onPressed: () {
+                            Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(widget.artist.songs[index]);
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {

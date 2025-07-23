@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:spotify_clone/model/music.dart';
 import 'music_player.dart';
 import '../utils.dart';
+import 'package:provider/provider.dart';
+import 'package:spotify_clone/provider/mini_player_provider.dart';
 
 class Favorite extends StatefulWidget {
   const Favorite({super.key});
@@ -65,6 +67,7 @@ class _FavoriteState extends State<Favorite> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
+                      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(favorite[index]);
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {

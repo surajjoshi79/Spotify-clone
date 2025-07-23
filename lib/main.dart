@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:spotify_clone/model/artist.dart';
 import 'package:spotify_clone/model/category.dart';
 import 'package:spotify_clone/model/music.dart';
+import 'package:spotify_clone/provider/mini_player_provider.dart';
 import 'package:spotify_clone/screen/app.dart';
 import 'package:spotify_clone/provider/theme_provider.dart';
 import 'package:spotify_clone/utils.dart';
@@ -25,8 +26,11 @@ void main() async {
   await Hive.openBox("followedBox");
   await Hive.openBox("playlistBox");
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => MiniPlayerProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -84,13 +88,6 @@ class _SplashScreenState extends State<SplashScreen> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         color: Colors.black38,
-        /*decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Colors.white10, Colors.black, Colors.black, Colors.black],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),*/
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -10,6 +10,8 @@ import 'package:spotify_clone/service/artist_service.dart';
 import 'package:spotify_clone/service/category_service.dart';
 import 'package:spotify_clone/service/music_service.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:provider/provider.dart';
+import 'package:spotify_clone/provider/mini_player_provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -35,6 +37,7 @@ class _HomeState extends State<Home> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
+              Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(list[index]);
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
@@ -74,6 +77,8 @@ class _HomeState extends State<Home> {
                     ),
                     Text(
                       list[index].label,
+                      maxLines: 2,
+                      overflow: TextOverflow.clip,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.inversePrimary,
                         fontSize: 20,
@@ -240,7 +245,7 @@ class _HomeState extends State<Home> {
                                         Theme.of(
                                           context,
                                         ).colorScheme.inversePrimary,
-                                    fontSize: 16,
+                                    fontSize: 14,
                                   ),
                                 ),
                               ),

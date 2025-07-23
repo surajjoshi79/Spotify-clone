@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/model/music.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:spotify_clone/provider/mini_player_provider.dart';
 import '../utils.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:provider/provider.dart';
 
 class MusicPlayer extends StatefulWidget {
   final List<Music> playing;
@@ -128,6 +130,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
               SizedBox(height: MediaQuery.of(context).size.height / 10),
               Text(
                 widget.playing[widget.current].label,
+                overflow: TextOverflow.clip,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -136,6 +139,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
               ),
               Text(
                 widget.playing[widget.current].artist,
+                overflow: TextOverflow.clip,
                 style: TextStyle(
                   fontSize: 20,
                   color: Theme.of(context).colorScheme.inversePrimary,
@@ -175,11 +179,148 @@ class _MusicPlayerState extends State<MusicPlayer> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.info, size: 40),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (context){
+                          return DraggableScrollableSheet(
+                            initialChildSize: 0.6,
+                            maxChildSize: 0.9,
+                            minChildSize: 0.6,
+                            builder: (context,controller){
+                              return Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color:Theme.of(context).colorScheme.primary,
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(20))
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Now Playing",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).colorScheme.inversePrimary
+                                      )
+                                    ),
+                                    ListTile(
+                                      title: Text(widget.playing[widget.current].label),
+                                      subtitle: Text(widget.playing[widget.current].artist),
+                                      leading: SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: Image.network(
+                                          widget.playing[widget.current].imageUrl,
+                                          fit: BoxFit.fill,
+                                          loadingBuilder: (context, child, loadingProgress,) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              return Shimmer(
+                                                duration: Duration(milliseconds: 100),
+                                                interval: Duration(milliseconds: 50),
+                                                child: Container(color: Colors.grey),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      "Queue",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).colorScheme.inversePrimary
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        controller: controller,
+                                        itemCount: 10,
+                                        itemBuilder: (context,index){
+                                          return ListTile(
+                                            title: Text(widget.playing[(widget.current+index+1)%widget.playing.length].label),
+                                            subtitle: Text(widget.playing[(widget.current+index+1)%widget.playing.length].artist),
+                                            leading: SizedBox(
+                                              height: 50,
+                                              width: 50,
+                                              child: Image.network(
+                                                widget.playing[(widget.current+index+1)%widget.playing.length].imageUrl,
+                                                fit: BoxFit.fill,
+                                                loadingBuilder: (context, child, loadingProgress,) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  } else {
+                                                    return Shimmer(
+                                                      duration: Duration(milliseconds: 100),
+                                                      interval: Duration(milliseconds: 50),
+                                                      child: Container(color: Colors.grey),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            trailing: IconButton(
+                                              onPressed: () {
+                                                if (!favoriteBox.containsKey(widget.playing[(widget.current+index+1)%widget.playing.length].label)) {
+                                                  favoriteBox.put(widget.playing[(widget.current+index+1)%widget.playing.length].label,widget.playing[(widget.current+index+1)%widget.playing.length]);
+                                                  final snackBar = SnackBar(
+                                                    elevation: 0,
+                                                    behavior: SnackBarBehavior.floating,
+                                                    backgroundColor: Colors.transparent,
+                                                    content: AwesomeSnackbarContent(
+                                                      title: 'Yohoooo!',
+                                                      message:
+                                                      'Added to favorite ${widget.playing[(widget.current+index+1)%widget.playing.length].label}',
+                                                      contentType: ContentType.success,
+                                                    ),
+                                                  );
+                                                  ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+                                                  setState(() {});
+                                                } else {
+                                                  final snackBar = SnackBar(
+                                                    elevation: 0,
+                                                    behavior: SnackBarBehavior.floating,
+                                                    backgroundColor: Colors.transparent,
+                                                    content: AwesomeSnackbarContent(
+                                                      title: 'Opsss!',
+                                                      message:
+                                                      'Already added to favorite ${widget.playing[(widget.current+index+1)%widget.playing.length].label}',
+                                                      contentType: ContentType.warning,
+                                                    ),
+                                                  );
+                                                  ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+                                                }
+                                                setState(() {});
+                                              },
+                                              icon: Icon(
+                                                Icons.favorite,
+                                                color:
+                                                favoriteBox.containsKey(widget.playing[(widget.current+index+1)%widget.playing.length].label) ? Colors.red : Theme.of(context).colorScheme.inversePrimary,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      );
+                    },
+                    icon: Icon(Icons.queue_music, size: 35),
                   ),
                   IconButton(
                     onPressed: () {
+                      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(widget.playing[widget.current!=0?widget.current-1:widget.playing.length-1]);
                       Navigator.of(context).pop();
                       Navigator.of(context).push(MaterialPageRoute(builder: (context){
                         return MusicPlayer(playing: widget.playing, current: widget.current!=0?widget.current-1:widget.playing.length-1);
@@ -197,6 +338,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   ),
                   IconButton(
                     onPressed: () {
+                      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(widget.playing[(widget.current+1)%widget.playing.length]);
                       Navigator.of(context).pop();
                       Navigator.of(context).push(MaterialPageRoute(builder: (context){
                         return MusicPlayer(playing: widget.playing, current: (widget.current+1)%widget.playing.length);

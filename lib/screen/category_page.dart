@@ -4,6 +4,8 @@ import 'package:spotify_clone/screen/music_player.dart';
 import 'package:spotify_clone/utils.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:provider/provider.dart';
+import 'package:spotify_clone/provider/mini_player_provider.dart';
 
 class CategoryPage extends StatefulWidget {
   final Category category;
@@ -203,6 +205,7 @@ class _ArtistState extends State<CategoryPage> {
                         ),
                         IconButton(
                           onPressed: () {
+                            Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(widget.category.music[index]);
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
