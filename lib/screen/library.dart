@@ -3,7 +3,9 @@ import 'package:spotify_clone/screen/favorite.dart';
 import 'package:spotify_clone/screen/music_player.dart';
 import 'package:spotify_clone/screen/playlist.dart';
 import '../model/music.dart';
+import '../provider/mini_player_provider.dart';
 import '../service/music_service.dart';
+import 'package:provider/provider.dart';
 import 'followed.dart';
 
 class Library extends StatefulWidget {
@@ -121,6 +123,8 @@ class _LibraryState extends State<Library> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   libraryTab[index],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.clip,
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.primary,
                                     fontSize: 16,
@@ -156,6 +160,7 @@ class _LibraryState extends State<Library> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
+                        Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(music[index]);
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {

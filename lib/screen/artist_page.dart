@@ -68,7 +68,7 @@ class _ArtistState extends State<ArtistPage> {
             ),
             SizedBox(height: 10),
             SizedBox(
-              width: 165,
+              width: 170,
               child: ElevatedButton(
                 onPressed: () {
                   if (!followBox.containsKey(widget.artist.name)) {

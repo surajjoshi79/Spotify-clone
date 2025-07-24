@@ -4,6 +4,8 @@ import 'package:spotify_clone/service/artist_service.dart';
 import 'package:spotify_clone/service/category_service.dart';
 import 'package:spotify_clone/service/music_service.dart';
 import '../model/music.dart';
+import '../provider/mini_player_provider.dart';
+import 'package:provider/provider.dart';
 import 'artist_page.dart';
 import 'music_player.dart';
 
@@ -88,6 +90,7 @@ class _ResultPageState extends State<ResultPage> {
                     if(searchResult[index].label.contains(widget.search) || searchResult[index].description.contains(widget.search) || searchResult[index].artist.contains(widget.search)) {
                       return GestureDetector(
                         onTap: () {
+                          Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(searchResult[index]);
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
