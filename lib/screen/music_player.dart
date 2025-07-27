@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:spotify_clone/model/music.dart';
 import 'package:just_audio/just_audio.dart';
@@ -6,6 +7,7 @@ import '../utils.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class MusicPlayer extends StatefulWidget {
   final List<Music> playing;
@@ -19,6 +21,7 @@ class MusicPlayer extends StatefulWidget {
 class _MusicPlayerState extends State<MusicPlayer> {
   Duration position=Duration.zero;
   Duration duration=Duration.zero;
+  String lyrics="";
 
   String formatDuration(Duration d){
     final minutes=d.inMinutes.remainder(60);
@@ -38,9 +41,27 @@ class _MusicPlayerState extends State<MusicPlayer> {
     player.seek(Duration(seconds: values.toInt()));
   }
 
+  Future<void> getLyrics(String song,String artist) async{
+    final query = Uri.encodeComponent('$song $artist');
+    final url = Uri.parse('https://lrclib.net/api/search?q=$query');
+    final response = await http.get(url);
+    if(response.statusCode==200){
+      final data=json.decode(response.body);
+      if(data.isNotEmpty) {
+        lyrics = data[0]['plainLyrics'];
+      }else{
+        lyrics='Not found';
+      }
+    }else{
+      lyrics='Not found';
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
+    getLyrics(widget.playing[widget.current].label, widget.playing[widget.current].artist);
     try {
       if(player.playing) {
         player.pause();
@@ -429,7 +450,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                         Text(
                           widget.playing[(widget.current+1)%widget.playing.length].label,
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
+                            color: Theme.of(context).colorScheme.inversePrimary,
                             fontSize: 18,
                             fontWeight: FontWeight.bold
                           ),
@@ -441,7 +462,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                             overflow: TextOverflow.ellipsis,
                             widget.playing[(widget.current+1)%widget.playing.length].artist,
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context).colorScheme.inversePrimary,
                                 fontSize: 16,
                             ),
                           ),
@@ -450,10 +471,39 @@ class _MusicPlayerState extends State<MusicPlayer> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: Icon(Icons.arrow_forward,color:Theme.of(context).colorScheme.primary),
+                      child: Icon(Icons.arrow_forward,color:Theme.of(context).colorScheme.inversePrimary),
                     )
                   ],
                 ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text("Lyrics",style: TextStyle(fontSize: 18,color: Theme.of(context).colorScheme.inversePrimary)),
+              Text("by LRCLIB",style: TextStyle(fontSize: 14,color: Theme.of(context).colorScheme.inversePrimary)),
+              SizedBox(
+                height: 5,
+              ),
+              Container(
+                height: 300,
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    borderRadius: BorderRadius.circular(8)
+                ),
+                child:lyrics.trim()!=''?
+                SingleChildScrollView(
+                  child: Text(
+                    lyrics,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ):Center(child: CircularProgressIndicator.adaptive()),
               )
             ],
           ),

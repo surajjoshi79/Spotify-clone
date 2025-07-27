@@ -12,6 +12,13 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   TextEditingController music=TextEditingController();
   FocusNode fn=FocusNode();
+
+  @override
+  void dispose() {
+    music.dispose();
+    fn.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -92,6 +99,7 @@ class _SearchState extends State<Search> {
                 height: MediaQuery.of(context).size.height/3,
               ),
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(

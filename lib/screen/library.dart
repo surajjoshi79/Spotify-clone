@@ -116,7 +116,7 @@ class _LibraryState extends State<Library> {
                             children: [
                               SizedBox(
                                 height: 80,
-                                width: 60,
+                                width: 55,
                                 child: libraryTabIcons[index],
                               ),
                               Padding(
@@ -124,7 +124,7 @@ class _LibraryState extends State<Library> {
                                 child: Text(
                                   libraryTab[index],
                                   maxLines: 1,
-                                  overflow: TextOverflow.clip,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.primary,
                                     fontSize: 16,

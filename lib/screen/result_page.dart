@@ -81,7 +81,7 @@ class _ResultPageState extends State<ResultPage> {
                 ),
               ),
               SizedBox(
-                height: 260,
+                height: 270,
                 child: ListView.builder(
                   padding: EdgeInsets.zero,
                   itemCount: searchResult.length,
@@ -120,14 +120,11 @@ class _ResultPageState extends State<ResultPage> {
                                 ),
                                 Text(
                                   searchResult[index].label,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.clip,
                                   style: TextStyle(
                                     color:
-                                    Theme
-                                        .of(
-                                      context,
-                                    )
-                                        .colorScheme
-                                        .inversePrimary,
+                                    Theme.of(context,).colorScheme.inversePrimary,
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -138,12 +135,7 @@ class _ResultPageState extends State<ResultPage> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color:
-                                    Theme
-                                        .of(
-                                      context,
-                                    )
-                                        .colorScheme
-                                        .inversePrimary,
+                                    Theme.of(context).colorScheme.inversePrimary,
                                     fontSize: 18,
                                   ),
                                 ),
