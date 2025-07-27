@@ -8,6 +8,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_lyric/lyrics_reader.dart';
 
 class MusicPlayer extends StatefulWidget {
   final List<Music> playing;
@@ -21,7 +22,7 @@ class MusicPlayer extends StatefulWidget {
 class _MusicPlayerState extends State<MusicPlayer> {
   Duration position=Duration.zero;
   Duration duration=Duration.zero;
-  String lyrics="";
+  String syncedLyrics='';
 
   String formatDuration(Duration d){
     final minutes=d.inMinutes.remainder(60);
@@ -48,12 +49,12 @@ class _MusicPlayerState extends State<MusicPlayer> {
     if(response.statusCode==200){
       final data=json.decode(response.body);
       if(data.isNotEmpty) {
-        lyrics = data[0]['plainLyrics'];
+        syncedLyrics=data[0]['syncedLyrics'];
       }else{
-        lyrics='Not found';
+        syncedLyrics='Not found';
       }
     }else{
-      lyrics='Not found';
+      syncedLyrics='Not found';
     }
     setState(() {});
   }
@@ -86,6 +87,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    final lyricModel=LyricsModelBuilder.create().bindLyricToMain(syncedLyrics).getModel();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
@@ -479,31 +481,50 @@ class _MusicPlayerState extends State<MusicPlayer> {
               SizedBox(
                 height: 5,
               ),
-              Text("Lyrics",style: TextStyle(fontSize: 18,color: Theme.of(context).colorScheme.inversePrimary)),
-              Text("by LRCLIB",style: TextStyle(fontSize: 14,color: Theme.of(context).colorScheme.inversePrimary)),
-              SizedBox(
-                height: 5,
-              ),
-              Container(
-                height: 300,
-                width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.all(10),
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.tertiary,
-                    borderRadius: BorderRadius.circular(8)
-                ),
-                child:lyrics.trim()!=''?
-                SingleChildScrollView(
-                  child: Text(
-                    lyrics,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+              Visibility(
+                visible: syncedLyrics.trim()!='' && syncedLyrics!='Not found',
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Container(
+                        height: 300,
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.tertiary,
+                            borderRadius: BorderRadius.circular(8)
+                        ),
+                        child: SingleChildScrollView(
+                            child: LyricsReader(
+                              model: lyricModel,
+                              position: position.inMilliseconds,
+                              lyricUi: UINetease(
+                                defaultSize: 22,
+                                defaultExtSize: 16,
+                                otherMainSize: 16,
+                                lineGap: 14,
+                                lyricAlign: LyricAlign.LEFT,
+                                bias: 0.2,
+                                highlight: false,
+                              ),
+                              playing: player.playing,
+                              size: Size(double.infinity, 300),
+                            )
+                        )
                     ),
-                  ),
-                ):Center(child: CircularProgressIndicator.adaptive()),
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Lyrics",style: TextStyle(fontSize: 12,color: Colors.white)),
+                          Text("by LRCLIB",style: TextStyle(fontSize: 10,color: Colors.white)),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               )
             ],
           ),
