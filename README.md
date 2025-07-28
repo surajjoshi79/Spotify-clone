@@ -31,9 +31,9 @@ Vibeify is a lightweight, feature-rich music player built with Flutter, focused 
 
 ### Screenshots
 
-<img src="screenshot/home_screen.jpg" height="400"/> <img src="screenshot/light_mode.jpg" height="400"/> <img src="screenshot/search_screen.jpg" height="400"/> <img src="screenshot/library_screen.jpg" height="400"/> <img src="screenshot/artist_screen.jpg" height="400"/>
+<img src="screenshot/home_screen.jpg" height="400"/> <img src="screenshot/light_mode.jpg" height="400"/> <img src="screenshot/search_screen.jpg" height="400"/> <img src="screenshot/library_screen.jpg" height="400"/> 
 
-<img src="screenshot/popular_playlist_screen.jpg" height="400"/> <img src="screenshot/music_player_screen.jpg" height="400"/> <img src="screenshot/queue_drawer.jpg" height="400"/> <img src="screenshot/synced_lyrics.jpg" height="400"/> <img src="screenshot/favorite_screen.jpg" height="400"/>
+<img src="screenshot/artist_screen.jpg" height="400"/> <img src="screenshot/popular_playlist_screen.jpg" height="400"/> <img src="screenshot/music_player_screen.jpg" height="400"/> <img src="screenshot/queue_drawer.jpg" height="400"/> 
 
-<img src="screenshot/followed_screen.jpg" height="400"/> <img src="screenshot/playlist_screen.jpg" height="400"/>
+<img src="screenshot/synced_lyrics.jpg" height="400"/> <img src="screenshot/favorite_screen.jpg" height="400"/> <img src="screenshot/followed_screen.jpg" height="400"/> <img src="screenshot/playlist_screen.jpg" height="400"/>
 
