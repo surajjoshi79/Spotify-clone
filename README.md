@@ -28,7 +28,7 @@ Vibeify is a lightweight, feature-rich music player built with Flutter, focused 
 - Light Theme
 - Dark Theme
 
-### Screenshots
+## 🖼️ Screenshots
 
 <img src="screenshot/home_screen.jpg" height="400"/> <img src="screenshot/light_mode.jpg" height="400"/> <img src="screenshot/search_screen.jpg" height="400"/> <img src="screenshot/library_screen.jpg" height="400"/> 
 
