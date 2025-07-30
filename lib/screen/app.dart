@@ -15,7 +15,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final screen = [Home(), Search(), Library()];
+  final screen = [const Home(), const Search(), const Library()];
   int current = 0;
   bool buildMiniPlayer = false;
   @override
@@ -26,83 +26,85 @@ class _AppState extends State<App> {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          buildMiniPlayer?
-          Container(
-            height: 60,
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: Colors.green.shade800,
-                borderRadius: BorderRadius.circular(8)
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(5),
-                      bottomLeft: Radius.circular(5),
-                    ),
-                    child: Image.network(
-                      Provider.of<MiniPlayerProvider>(context).getMusic().imageUrl,
-                      fit: BoxFit.fill,
-                      loadingBuilder: (context, child, loadingProgress,) {
-                        if (loadingProgress == null) {
-                          return child;
-                        } else {
-                          return Shimmer(
-                            duration: Duration(milliseconds: 100),
-                            interval: Duration(milliseconds: 50),
-                            child: Container(color: Colors.grey),
-                          );
-                        }
-                      },
+          Visibility(
+            visible: buildMiniPlayer,
+            child: Container(
+              height: 60,
+              margin: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: Colors.green.shade800,
+                  borderRadius: BorderRadius.circular(8)
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5),
+                        bottomLeft: Radius.circular(5),
+                      ),
+                      child: Image.network(
+                        Provider.of<MiniPlayerProvider>(context).getMusic().imageUrl,
+                        fit: BoxFit.fill,
+                        loadingBuilder: (context, child, loadingProgress,) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Shimmer(
+                              duration: Duration(milliseconds: 100),
+                              interval: Duration(milliseconds: 50),
+                              child: Container(color: Colors.grey),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      Provider.of<MiniPlayerProvider>(context).getMusic().label,
-                      style: TextStyle(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        Provider.of<MiniPlayerProvider>(context).getMusic().label,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.clip,
+                        Provider.of<MiniPlayerProvider>(context).getMusic().artist,
+                        style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    Text(
-                      maxLines: 1,
-                      overflow: TextOverflow.clip,
-                      Provider.of<MiniPlayerProvider>(context).getMusic().artist,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: IconButton(
-                    onPressed: (){
-                      if(player.playing){
-                        player.pause();
-                      }else{
-                        player.play();
-                      }
-                      setState(() {});
-                    },
-                    icon: player.playing?
-                    Icon(Icons.pause_circle,color: Theme.of(context).colorScheme.primary,size: 40):Icon(Icons.play_circle,color: Theme.of(context).colorScheme.primary,size: 40)
+                    ],
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: IconButton(
+                      onPressed: (){
+                        if(player.playing){
+                          player.pause();
+                        }else{
+                          player.play();
+                        }
+                        setState(() {});
+                      },
+                      icon: player.playing?
+                      Icon(Icons.pause_circle,color: Theme.of(context).colorScheme.primary,size: 40):Icon(Icons.play_circle,color: Theme.of(context).colorScheme.primary,size: 40)
+                    ),
+                  )
+                ],
+              ),
             ),
-          ): Container(),
+          ),
           BottomNavigationBar(
             onTap: (value) {
               setState(() {

@@ -50,11 +50,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
       final data=json.decode(response.body);
       if(data.isNotEmpty) {
         syncedLyrics=data[0]['syncedLyrics'];
-      }else{
-        syncedLyrics='Not found';
       }
-    }else{
-      syncedLyrics='Not found';
     }
     setState(() {});
   }
@@ -482,7 +478,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                 height: 5,
               ),
               Visibility(
-                visible: syncedLyrics.trim()!='' && syncedLyrics!='Not found',
+                visible: syncedLyrics.trim()!='',
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
