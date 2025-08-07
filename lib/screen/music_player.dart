@@ -32,8 +32,10 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   void handlePlayPause(){
     if(player.playing){
+      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(true, widget.playing[widget.current]);
       player.pause();
     }else{
+      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(false, widget.playing[widget.current]);
       player.play();
     }
   }
@@ -339,7 +341,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   ),
                   IconButton(
                     onPressed: () {
-                      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(widget.playing[widget.current!=0?widget.current-1:widget.playing.length-1]);
+                      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(true,widget.playing[widget.current!=0?widget.current-1:widget.playing.length-1]);
                       Navigator.of(context).pop();
                       Navigator.of(context).push(MaterialPageRoute(builder: (context){
                         return MusicPlayer(playing: widget.playing, current: widget.current!=0?widget.current-1:widget.playing.length-1);
@@ -357,7 +359,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   ),
                   IconButton(
                     onPressed: () {
-                      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(widget.playing[(widget.current+1)%widget.playing.length]);
+                      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(true,widget.playing[(widget.current+1)%widget.playing.length]);
                       Navigator.of(context).pop();
                       Navigator.of(context).push(MaterialPageRoute(builder: (context){
                         return MusicPlayer(playing: widget.playing, current: (widget.current+1)%widget.playing.length);

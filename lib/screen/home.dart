@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(list[index]);
+              Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(true,list[index]);
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
@@ -106,11 +106,11 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    if (DateTime.now().hour > 12 && DateTime.now().hour < 16) {
+    if (DateTime.now().hour >= 12 && DateTime.now().hour < 16) {
       message = 'Good afternoon';
-    } else if (DateTime.now().hour > 16 && DateTime.now().hour < 24) {
+    } else if (DateTime.now().hour >= 16 && DateTime.now().hour < 0) {
       message = 'Good evening';
-    } else if (DateTime.now().hour > 24 && DateTime.now().hour < 4) {
+    } else if (DateTime.now().hour >= 0 && DateTime.now().hour < 5) {
       message = 'Good night';
     } else {
       message = 'Good morning';

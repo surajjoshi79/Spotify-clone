@@ -90,7 +90,7 @@ class _ResultPageState extends State<ResultPage> {
                     if(searchResult[index].label.contains(widget.search) || searchResult[index].description.contains(widget.search) || searchResult[index].artist.contains(widget.search)) {
                       return GestureDetector(
                         onTap: () {
-                          Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(searchResult[index]);
+                          Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(true,searchResult[index]);
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {

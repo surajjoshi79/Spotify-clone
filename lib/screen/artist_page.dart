@@ -86,6 +86,7 @@ class _ArtistState extends State<ArtistPage> {
                     );
                     ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                   } else {
+                    followBox.delete(widget.artist.name);
                     final snackBar = SnackBar(
                       elevation: 0,
                       behavior: SnackBarBehavior.floating,
@@ -93,7 +94,7 @@ class _ArtistState extends State<ArtistPage> {
                       content: AwesomeSnackbarContent(
                         title: 'Opsssss!',
                         message:
-                        'You are already following ${widget.artist.name}',
+                        'You unfollowed ${widget.artist.name}',
                         contentType: ContentType.warning,
                       ),
                     );
@@ -215,7 +216,7 @@ class _ArtistState extends State<ArtistPage> {
                         ),
                         IconButton(
                           onPressed: () {
-                            Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(widget.artist.songs[index]);
+                            Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(true,widget.artist.songs[index]);
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {

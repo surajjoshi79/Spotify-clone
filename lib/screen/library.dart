@@ -160,7 +160,7 @@ class _LibraryState extends State<Library> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(music[index]);
+                        Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(true,music[index]);
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {

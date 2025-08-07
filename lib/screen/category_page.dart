@@ -205,7 +205,7 @@ class _ArtistState extends State<CategoryPage> {
                         ),
                         IconButton(
                           onPressed: () {
-                            Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(widget.category.music[index]);
+                            Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(true,widget.category.music[index]);
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {

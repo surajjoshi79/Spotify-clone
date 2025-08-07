@@ -67,7 +67,7 @@ class _FavoriteState extends State<Favorite> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(favorite[index]);
+                      Provider.of<MiniPlayerProvider>(context,listen: false).rebuild(true,favorite[index]);
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {

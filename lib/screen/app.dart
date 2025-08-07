@@ -97,7 +97,7 @@ class _AppState extends State<App> {
                         }
                         setState(() {});
                       },
-                      icon: player.playing?
+                      icon: Provider.of<MiniPlayerProvider>(context).getPlay() && player.playing?
                       Icon(Icons.pause_circle,color: Theme.of(context).colorScheme.primary,size: 40):Icon(Icons.play_circle,color: Theme.of(context).colorScheme.primary,size: 40)
                     ),
                   )
