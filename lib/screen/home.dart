@@ -108,11 +108,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     if (DateTime.now().hour >= 12 && DateTime.now().hour < 16) {
       message = 'Good afternoon';
-    } else if (DateTime.now().hour >= 16 && DateTime.now().hour < 0) {
+    } else if (DateTime.now().hour >= 16 && DateTime.now().hour < 23) {
       message = 'Good evening';
-    } else if (DateTime.now().hour >= 0 && DateTime.now().hour < 5) {
+    } else if (DateTime.now().hour >= 23 && DateTime.now().hour < 5) {
       message = 'Good night';
-    } else {
+    } else if(DateTime.now().hour >= 5 && DateTime.now().hour < 12){
       message = 'Good morning';
     }
     return Scaffold(
@@ -237,7 +237,7 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(4),
                                 child: Text(
                                   category[index].title,
                                   style: TextStyle(
