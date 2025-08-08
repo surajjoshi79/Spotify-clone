@@ -68,7 +68,7 @@ class _ArtistState extends State<ArtistPage> {
             ),
             SizedBox(height: 10),
             SizedBox(
-              width: 170,
+              width: 175,
               child: ElevatedButton(
                 onPressed: () {
                   if (!followBox.containsKey(widget.artist.name)) {
@@ -119,11 +119,11 @@ class _ArtistState extends State<ArtistPage> {
                         fontSize: 22,
                       ),
                     ),
-                    SizedBox(width: 5),
+                    SizedBox(width: 3),
                     Icon(
                       !followBox.containsKey(widget.artist.name) ? Icons.add : Icons.verified_outlined,
                       color: Theme.of(context).colorScheme.inversePrimary,
-                      size: 20,
+                      size: 18,
                     ),
                   ],
                 ),
